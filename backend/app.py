@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_socketio import SocketIO
-# from iotleds.bridge.server import MessageServer
-# from iotleds.bridge.message import Message, SolidColor
+from iotleds.bridge.server import MessageServer
+from iotleds.bridge.message import Message, SolidColor
 
-# ms = MessageServer()
+ms = MessageServer()
 print("Waiting for LED connection...")
-# ms.connect()
+ms.connect()
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -19,10 +19,10 @@ def hello_world():
 @socketio.on('color')
 def handle_color(color):
     scale = 100 / (color['r'] + color['g'] + color['b'])
-    msg = (int(color['r'] * scale),
+    msg = SolidColor((int(color['r'] * scale),
                       int(color['g'] * scale),
-                      int(color['b'] * scale))
-    #ms.send(msg)
+                      int(color['b'] * scale)))
+    ms.send(msg)
     print(msg)
 
 
