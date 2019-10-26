@@ -1,0 +1,14 @@
+[Unit]
+Description=SSH Connection for LED Flag
+After=network.target
+
+[Service]
+ExecStart=/bin/bash /home/pi/iotleds/network/connect.sh
+StandardOutput=inherit
+StandardError=inherit
+RestartSec=5
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

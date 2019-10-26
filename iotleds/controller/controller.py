@@ -4,7 +4,7 @@ import board
 import neopixel
 from datetime import datetime
 from threading import Thread, Lock
-from .colors import solid_color
+from iotleds.controller.colors import solid_color
 
 
 msg_functions = {
@@ -40,3 +40,7 @@ class LedController:
         # check if message is old?
         msg_functions[type(msg)](msg, self.pixels)
         self.lock.release()
+
+if __name__ == '__main__':
+    controller = LedController()
+
