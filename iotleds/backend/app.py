@@ -1,19 +1,19 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_socketio import SocketIO
 from iotleds.bridge.server import MessageServer
-from iotleds.bridge.message import Message, SolidColor
+from iotleds.bridge.message import SolidColor
 
 ms = MessageServer()
 print("Waiting for LED connection...")
 ms.connect()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build/static", template_folder="build")
 socketio = SocketIO(app)
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def index():
+    return render_template("index.html")
 
 
 @socketio.on('color')
