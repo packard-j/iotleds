@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from iotleds.bridge.server import MessageServer
-from iotleds.bridge.message import SolidColor
+from iotleds.bridge.message import SolidColor, Rainbow
 
 ms = MessageServer()
 print("Waiting for LED connection...")
@@ -15,6 +15,12 @@ socketio = SocketIO(app)
 @app.route('/')
 def index():
     return render_template("index.html")
+
+
+@app.route('/rainbow')
+def rainbow():
+    msg = Rainbow()
+    ms.send(msg)
 
 
 @socketio.on('color')
