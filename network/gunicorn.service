@@ -1,0 +1,16 @@
+[Unit]
+Description=gunicorn daemon for iotleds
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/pi/iotleds/iotleds/backend
+ExecStart=/usr/local/bin/gunicorn --bind=unix:/tmp/gunicorn.sock --worker-class eventlet -w 1 app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+

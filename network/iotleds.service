@@ -1,0 +1,12 @@
+[Unit]
+Description=controller for iotleds
+After=gunicorn.service
+
+[Service]
+User=root
+WorkingDirectory=/home/pi/iotleds/iotleds/controller
+ExecStart=/usr/bin/python3 controller.py
+
+[Install]
+WantedBy=multi-user.target
+
