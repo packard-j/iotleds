@@ -21,6 +21,7 @@ def index():
 def rainbow():
     msg = Rainbow()
     ms.send(msg)
+    return "ok"
 
 
 @socketio.on('color')
