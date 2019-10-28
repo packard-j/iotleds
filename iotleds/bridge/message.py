@@ -10,5 +10,11 @@ class SolidColor:
         return "SolidColor: {}".format(self.color)
 
 
-Message = TypeVar('Message', SolidColor, str)
+class Rainbow:
+
+    def __str__(self):
+        return "Rainbow"
+
+
+Message = TypeVar('Message', SolidColor, Rainbow)
 
