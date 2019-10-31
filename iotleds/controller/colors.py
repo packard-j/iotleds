@@ -1,6 +1,7 @@
 from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow
 from neopixel import NeoPixel
 from math import pi, cos
+from time import sleep
 
 
 class Mode:
@@ -35,21 +36,26 @@ class CascadeMode(Mode):
     def __init__(self, pixels: NeoPixel, msg: Cascade):
         super().__init__(pixels)
         self.color = msg.color
-        self.pixel_colors = [self.color * 750]
+        self.pixel_colors = [(0, 0, 0)] * 750
 
     def update(self, msg: Cascade):
         self.color = msg.color
+        sleep(0.1)
 
     def run(self, **kwargs):
         free = kwargs['free']
         while free():
             self.shift(self.pixels)
+            sleep(0.1)
 
     def shift(self, pixels: NeoPixel):
         for i in range(749):
-            pixels[i+1] = pixels[i]
-        pixels[0] = self.color
-        pixels.show()
+            self.pixel_colors[i+1] = self.pixel_colors[i]
+        self.pixel_colors[0] = self.color
+        for i in range(750):
+            self.pixels[i] = self.pixel_colors[i]
+        self.pixels.show()
+        print(self.pixel_colors[0:20])
 
 
 CYCLE = 750
