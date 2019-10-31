@@ -42,18 +42,6 @@ class LedController:
                 self.mode.run(free=lambda: self.message_queue.empty())
 
 
-class Mode:
-
-    def __init__(self, pixels: neopixel.NeoPixel):
-        self.pixels = pixels
-
-    def update(self, msg: Message):
-        pass
-
-    def run(self, **kwargs):
-        pass
-
-
 if __name__ == '__main__':
     controller = LedController()
     controller.start()

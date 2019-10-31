@@ -1,7 +1,18 @@
-from iotleds.bridge.message import SolidColor, Cascade, Rainbow
-from iotleds.controller.controller import Mode
+from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow
 from neopixel import NeoPixel
 from math import pi, cos
+
+
+class Mode:
+
+    def __init__(self, pixels: NeoPixel):
+        self.pixels = pixels
+
+    def update(self, msg: Message):
+        pass
+
+    def run(self, **kwargs):
+        pass
 
 
 class SolidColorMode(Mode):
