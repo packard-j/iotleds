@@ -1,22 +1,22 @@
 from iotleds.bridge.client import MessageClient
-from iotleds.bridge.message import Message, SolidColor, Rainbow
+from iotleds.bridge.message import Message, SolidColor, Rainbow, Cascade
 import board
 import neopixel
 from datetime import datetime
 from queue import Queue, Full
-from iotleds.controller.colors import solid_color, rainbow
-
-
-msg_functions = {
-    SolidColor: solid_color,
-    Rainbow: rainbow
-}
+from iotleds.controller.colors import SolidColorMode, CascadeMode, RainbowMode
 
 
 class LedController:
 
     def __init__(self):
         self.pixels = neopixel.NeoPixel(board.D18, 750, auto_write=False)
+        self.modes = {
+            SolidColor: SolidColorMode,
+            Cascade: CascadeMode,
+            Rainbow: RainbowMode
+        }
+        self.mode = self.modes[SolidColor](self.pixels)
         self.message_queue = Queue(maxsize=10)
         self.mc = MessageClient()
         self.mc.listen(self.message_handler)
@@ -34,8 +34,24 @@ class LedController:
     def start(self):
         while True:
             msg = self.message_queue.get()
-            msg_functions[type(msg)](msg, self.pixels,
-                                     free=lambda: self.message_queue.empty())
+            msg_mode = self.modes[type(msg)]
+            if type(self.mode) == msg_mode:
+                self.mode.update(msg)
+            else:
+                self.mode = msg_mode(msg)
+                self.mode.run(free=lambda: self.message_queue.empty())
+
+
+class Mode:
+
+    def __init__(self, pixels: neopixel.NeoPixel):
+        self.pixels = pixels
+
+    def update(self, msg: Message):
+        pass
+
+    def run(self, **kwargs):
+        pass
 
 
 if __name__ == '__main__':

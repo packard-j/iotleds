@@ -16,5 +16,14 @@ class Rainbow:
         return "Rainbow"
 
 
-Message = TypeVar('Message', SolidColor, Rainbow)
+class Cascade:
+
+    def __init__(self, color: Tuple[int, int, int]):
+        self.color = color
+
+    def __str__(self):
+        return "Cascade: {}".format(self.color)
+
+
+Message = TypeVar('Message', SolidColor, Rainbow, Cascade)
 
