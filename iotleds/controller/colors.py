@@ -1,5 +1,5 @@
 from iotleds.bridge.message import SolidColor, Cascade, Rainbow
-from .controller import Mode
+from iotleds.controller.controller import Mode
 from neopixel import NeoPixel
 from math import pi, cos
 
