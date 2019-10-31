@@ -25,7 +25,7 @@ class SolidColorMode(Mode):
         self.color = msg.color
         self.run()
 
-    def run(self):
+    def run(self, **kwargs):
         self.pixels.fill(self.color)
         self.pixels.show()
 

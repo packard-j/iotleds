@@ -38,7 +38,7 @@ class LedController:
             if type(self.mode) == msg_mode:
                 self.mode.update(msg)
             else:
-                self.mode = msg_mode(msg)
+                self.mode = msg_mode(self.pixels, msg)
                 self.mode.run(free=lambda: self.message_queue.empty())
 
 
