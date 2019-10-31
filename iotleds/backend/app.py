@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from iotleds.bridge.server import MessageServer
-from iotleds.bridge.message import SolidColor, Rainbow
+from iotleds.bridge.message import SolidColor, Rainbow, Cascade
 
 ms = MessageServer()
 print("Waiting for LED connection...")
@@ -26,11 +26,13 @@ def rainbow():
 
 @socketio.on('color')
 def handle_color(color):
-    msg = SolidColor((int(color['r']*100/765),
-                      int(color['g']*100/765),
-                      int(color['b']*100/765)))
-    ms.send(msg)
-    print(msg)
+    c = (int(color['r']*100/765),
+         int(color['g']*100/765),
+         int(color['b']*100/765))
+    if color['cascade']:
+        ms.send(Cascade(c))
+    else:
+        ms.send(SolidColor(c))
 
 
 if __name__ == '__main__':
