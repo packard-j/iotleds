@@ -27,11 +27,16 @@ class Cascade:
 
 class Pattern:
 
-    def __init__(self):
-        pass
+    def __init__(self, colors: Tuple[Tuple[int, int, int], Tuple[int, int, int]],
+                 n: int, speed: int):
+        self.colors = colors
+        self.n = n
+        self.speed = speed
 
     def __str__(self):
-        return "Pattern"
+        return "Pattern: {} to {} - {} iterations @ speed {}".format(
+            self.colors[0], self.colors[1], self.n, self.speed
+        )
 
 
 Message = TypeVar('Message', SolidColor, Rainbow, Cascade, Pattern)

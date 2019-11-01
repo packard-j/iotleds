@@ -34,11 +34,12 @@ class PatternMode(Mode):
 
     def __init__(self, pixels: NeoPixel, msg: Pattern):
         super().__init__(pixels)
-        self.pattern = None
-        self.colors = self.generate_2c((27, 5, 0), (0, 11, 27), 5)
+        self.speed = msg.speed
+        self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
 
     def update(self, msg: Message):
-        self.pattern = msg.pattern
+        self.speed = msg.speed
+        self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
 
     def run(self, **kwargs):
         free = kwargs['free']
@@ -47,7 +48,7 @@ class PatternMode(Mode):
             for i in range(750):
                 self.pixels[i] = self.colors[(i + s) % 750]
             self.pixels.show()
-            s += 2
+            s += self.speed
             if s == 750:
                 s = 0
 
