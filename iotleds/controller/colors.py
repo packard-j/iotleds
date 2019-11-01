@@ -1,6 +1,7 @@
-from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow
+from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow, Pattern
 from neopixel import NeoPixel
 from math import pi, cos
+from typing import Tuple
 
 
 class Mode:
@@ -27,6 +28,38 @@ class SolidColorMode(Mode):
     def run(self, **kwargs):
         self.pixels.fill(self.color)
         self.pixels.show()
+
+
+class PatternMode(Mode):
+
+    def __init__(self, pixels: NeoPixel, msg: Pattern):
+        super().__init__(pixels)
+        self.pattern = None
+        self.colors = self.generate_2c((27, 5, 0), (0, 11, 27), 5)
+
+    def update(self, msg: Message):
+        self.pattern = msg.pattern
+
+    def run(self, **kwargs):
+        free = kwargs['free']
+        s = 0
+        while free:
+            for i in range(750):
+                self.pixels[i] = self.colors[(i + s) % 750]
+            self.pixels.show()
+            s += 2
+            if s == 750:
+                s = 0
+
+    @staticmethod
+    def generate_2c(c1: Tuple[int, int, int], c2: Tuple[int, int, int], n: int):
+        width_up = 750//(2*n)
+        step = tuple(map(lambda a, b: (b - a)/width_up, c1, c2))
+        pattern = [tuple(round(c1[i] + step[i]*n) for i in range(3)) for n in range(width_up)]
+        pattern_copy = pattern.copy()
+        pattern_copy.reverse()
+        pattern.extend(pattern_copy)
+        return [pattern[i % (2*width_up)] for i in range(750)]
 
 
 class CascadeMode(Mode):

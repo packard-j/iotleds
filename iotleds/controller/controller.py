@@ -1,10 +1,10 @@
 from iotleds.bridge.client import MessageClient
-from iotleds.bridge.message import Message, SolidColor, Rainbow, Cascade
+from iotleds.bridge.message import *
 import board
 import neopixel
 from datetime import datetime
 from queue import Queue, Full
-from iotleds.controller.colors import SolidColorMode, CascadeMode, RainbowMode
+from iotleds.controller.colors import SolidColorMode, CascadeMode, RainbowMode, PatternMode
 
 
 class LedController:
@@ -14,7 +14,8 @@ class LedController:
         self.modes = {
             SolidColor: SolidColorMode,
             Cascade: CascadeMode,
-            Rainbow: RainbowMode
+            Rainbow: RainbowMode,
+            Pattern: PatternMode
         }
         self.mode = self.modes[SolidColor](self.pixels)
         self.message_queue = Queue(maxsize=10)
