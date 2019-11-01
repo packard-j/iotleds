@@ -23,7 +23,6 @@ class SolidColorMode(Mode):
 
     def update(self, msg: SolidColor):
         self.color = msg.color
-        self.run()
 
     def run(self, **kwargs):
         self.pixels.fill(self.color)
