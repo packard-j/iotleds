@@ -44,7 +44,7 @@ class PatternMode(Mode):
     def run(self, **kwargs):
         free = kwargs['free']
         s = 0
-        while free:
+        while free():
             for i in range(750):
                 self.pixels[i] = self.colors[(i + s) % 750]
             self.pixels.show()

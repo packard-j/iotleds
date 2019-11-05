@@ -36,6 +36,8 @@ class LedController:
         while True:
             msg = self.message_queue.get()
             msg_mode = self.modes[type(msg)]
+            print("msg_mode:", msg_mode)
+            print("type(self.mode):", type(self.mode)) 
             if type(self.mode) == msg_mode:
                 print("Updating...")
                 self.mode.update(msg)
