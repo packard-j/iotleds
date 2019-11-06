@@ -37,15 +37,18 @@ class PatternMode(Mode):
         self.speed = msg.speed
         self.c1 = msg.colors[0]
         self.c2 = msg.colors[1]
-        self.colors = self.generate_2c(self.c1, self.c2, msg.n)
+        self.n = msg.n
+        self.colors = self.generate_2c()
         self.offset = 0
 
     def update(self, msg: Message):
         self.speed = msg.speed
-        if msg.colors[0] != self.c1 or msg.colors[1] != self.c2:
+        # Any of the variables which affect the pattern
+        if msg.n != self.n or msg.colors[0] != self.c1 or msg.colors[1] != self.c2:
+            self.n = msg.n
             self.c1 = msg.colors[0]
             self.c2 = msg.colors[1]
-            self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
+            self.colors = self.generate_2c()
 
     def run(self, **kwargs):
         free = kwargs['free']
@@ -55,11 +58,10 @@ class PatternMode(Mode):
             self.pixels.show()
             self.offset = (self.offset + self.speed) % 750
 
-    @staticmethod
-    def generate_2c(c1: Tuple[int, int, int], c2: Tuple[int, int, int], n: int):
-        width_up = 750//(2*n)
-        step = tuple(map(lambda a, b: (b - a)/width_up, c1, c2))
-        pattern = [tuple(round(c1[i] + step[i]*n) for i in range(3)) for n in range(width_up)]
+    def generate_2c(self):
+        width_up = 750//(2*self.n)
+        step = tuple(map(lambda a, b: (b - a)/width_up, self.c1, self.c2))
+        pattern = [tuple(round(self.c1[i] + step[i]*n) for i in range(3)) for n in range(width_up)]
         pattern_copy = pattern.copy()
         pattern_copy.reverse()
         pattern.extend(pattern_copy)
