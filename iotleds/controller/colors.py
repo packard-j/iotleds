@@ -35,22 +35,25 @@ class PatternMode(Mode):
     def __init__(self, pixels: NeoPixel, msg: Pattern):
         super().__init__(pixels)
         self.speed = msg.speed
-        self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
+        self.c1 = msg.colors[0]
+        self.c2 = msg.colors[1]
+        self.colors = self.generate_2c(self.c1, self.c2, msg.n)
+        self.offset = 0
 
     def update(self, msg: Message):
         self.speed = msg.speed
-        self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
+        if msg.colors[0] != self.c1 or msg.colors[1] != self.c2:
+            self.c1 = msg.colors[0]
+            self.c2 = msg.colors[1]
+            self.colors = self.generate_2c(msg.colors[0], msg.colors[1], msg.n)
 
     def run(self, **kwargs):
         free = kwargs['free']
-        s = 0
         while free():
             for i in range(750):
-                self.pixels[i] = self.colors[(i + s) % 750]
+                self.pixels[i] = self.colors[(i + self.offset) % 750]
             self.pixels.show()
-            s += self.speed
-            if s == 750:
-                s = 0
+            self.offset = (self.offset + self.speed) % 750
 
     @staticmethod
     def generate_2c(c1: Tuple[int, int, int], c2: Tuple[int, int, int], n: int):
