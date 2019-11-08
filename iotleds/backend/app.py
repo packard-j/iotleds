@@ -48,10 +48,19 @@ def handle_color(color):
     c = (int(color['r']*100/765),
          int(color['g']*100/765),
          int(color['b']*100/765))
-    if color['cascade']:
-        ms.send(Cascade(c))
-    else:
-        ms.send(SolidColor(c))
+    ms.send(SolidColor(c))
+
+
+@socketio.on('cascade')
+def handle_cascade(cascade):
+    color = cascade.get('color')
+    c = None
+    if color:
+        c = (int(color['r'] * 100 / 765),
+             int(color['g'] * 100 / 765),
+             int(color['b'] * 100 / 765))
+    loop = cascade.get('loop')
+    ms.send(Cascade(c, loop))
 
 
 if __name__ == '__main__':

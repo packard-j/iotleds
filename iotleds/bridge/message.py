@@ -18,8 +18,9 @@ class Rainbow:
 
 class Cascade:
 
-    def __init__(self, color: Tuple[int, int, int]):
+    def __init__(self, color: Tuple[int, int, int], loop: bool):
         self.color = color
+        self.loop = loop
 
     def __str__(self):
         return "Cascade: {}".format(self.color)

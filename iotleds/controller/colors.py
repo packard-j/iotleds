@@ -74,9 +74,13 @@ class CascadeMode(Mode):
         super().__init__(pixels)
         self.color = msg.color
         self.pixels.fill((0, 0, 0))
+        self.loop = msg.loop
 
     def update(self, msg: Cascade):
-        self.color = msg.color
+        if msg.color:
+            self.color = msg.color
+        if self.loop is not None:
+            self.loop = msg.loop
 
     def run(self, **kwargs):
         free = kwargs['free']
@@ -84,9 +88,12 @@ class CascadeMode(Mode):
             self.shift()
 
     def shift(self):
+        if self.loop:
+            self.pixels[0] = self.pixels[749]
+        else:
+            self.pixels[0] = self.color
         for i in range(749, 0, -1):
             self.pixels[i] = self.pixels[i-1]
-        self.pixels[0] = self.color
         self.pixels.show()
 
 
