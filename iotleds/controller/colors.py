@@ -72,8 +72,10 @@ class CascadeMode(Mode):
 
     def __init__(self, pixels: NeoPixel, msg: Cascade):
         super().__init__(pixels)
-        self.color = msg.color
-        self.pixels.fill((0, 0, 0))
+        if msg.color:
+            self.color = msg.color
+        else:
+            self.color = (0, 0, 0)
         self.loop = msg.loop
 
     def update(self, msg: Cascade):
