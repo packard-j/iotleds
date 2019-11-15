@@ -13,6 +13,8 @@ socketio = SocketIO(app)
 
 
 @app.route('/')
+@app.route('/cascade')
+@app.route('/pattern')
 def index():
     return render_template("index.html")
 
@@ -39,6 +41,13 @@ def pattern():
 @app.route('/rainbow')
 def rainbow():
     msg = Rainbow()
+    ms.send(msg)
+    return "ok"
+
+
+@app.route('/secret')
+def secret():
+    msg = Secret()
     ms.send(msg)
     return "ok"
 
