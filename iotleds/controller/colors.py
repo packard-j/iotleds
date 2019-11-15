@@ -149,13 +149,16 @@ class SecretMode(Mode):
         frequency1 = 2.4  # or 1.666 for more variation
         frequency2 = 2.4  # or 2.666 for more variation
         frequency3 = 2.4  # or 3.666 for more variation
-        # test if phase will actually change anything
+        # test if shift will actually change anything
         shift1 = 0
         shift2 = 2
         shift3 = 4
 
         while free():
             for i in range(50):  # completely guessing what number this should be
+                if not free:
+                    break
+
                 red = round(sin(frequency1 * i + shift1) * amplitude + center)
                 grn = round(sin(frequency2 * i + shift2) * amplitude + center)
                 blu = round(sin(frequency3 * i + shift3) * amplitude + center)
