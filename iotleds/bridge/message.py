@@ -40,5 +40,11 @@ class Pattern:
         )
 
 
-Message = TypeVar('Message', SolidColor, Rainbow, Cascade, Pattern)
+class Secret:
+
+    def __str__(self):
+        return "Secret"
+
+
+Message = TypeVar('Message', SolidColor, Rainbow, Cascade, Pattern, Secret)
 

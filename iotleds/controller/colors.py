@@ -1,6 +1,6 @@
-from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow, Pattern
+from iotleds.bridge.message import Message, SolidColor, Cascade, Rainbow, Pattern, Secret
 from neopixel import NeoPixel
-from math import pi, cos
+from math import pi, cos, sin
 from typing import Tuple
 
 
@@ -59,13 +59,13 @@ class PatternMode(Mode):
             self.offset = (self.offset + self.speed) % 750
 
     def generate_2c(self):
-        width_up = 750//(2*self.n)
-        step = tuple(map(lambda a, b: (b - a)/width_up, self.c1, self.c2))
-        pattern = [tuple(round(self.c1[i] + step[i]*n) for i in range(3)) for n in range(width_up)]
+        width_up = 750 // (2 * self.n)
+        step = tuple(map(lambda a, b: (b - a) / width_up, self.c1, self.c2))
+        pattern = [tuple(round(self.c1[i] + step[i] * n) for i in range(3)) for n in range(width_up)]
         pattern_copy = pattern.copy()
         pattern_copy.reverse()
         pattern.extend(pattern_copy)
-        return [pattern[i % (2*width_up)] for i in range(750)]
+        return [pattern[i % (2 * width_up)] for i in range(750)]
 
 
 class CascadeMode(Mode):
@@ -95,13 +95,13 @@ class CascadeMode(Mode):
         else:
             self.pixels[0] = self.color
         for i in range(749, 0, -1):
-            self.pixels[i] = self.pixels[i-1]
+            self.pixels[i] = self.pixels[i - 1]
         self.pixels.show()
 
 
 CYCLE = 750
-SPACING = CYCLE/3
-AMP = 100/2
+SPACING = CYCLE / 3
+AMP = 100 / 2
 DEAD_STARTS = [(i + 1) % 3 * SPACING for i in range(3)]
 DEAD_ENDS = [ds + SPACING for ds in DEAD_STARTS]
 
@@ -133,3 +133,35 @@ class RainbowMode(Mode):
             s += 2
             if s == 750:
                 s = 0
+
+
+class SecretMode(Mode):
+
+    def __init__(self, pixels: NeoPixel, msg: Secret):
+        super().__init__(pixels)
+        self.color = (0, 0, 0)
+
+    def run(self, **kwargs):
+
+        free = kwargs['free']
+        center = 128
+        amplitude = 127
+        frequency1 = 2.4  # or 1.666 for more variation
+        frequency2 = 2.4  # or 2.666 for more variation
+        frequency3 = 2.4  # or 3.666 for more variation
+        # test if phase will actually change anything
+        shift1 = 0
+        shift2 = 2
+        shift3 = 4
+
+        while free():
+            for i in range(50):  # completely guessing what number this should be
+                red = round(sin(frequency1 * i + shift1) * amplitude + center)
+                grn = round(sin(frequency2 * i + shift2) * amplitude + center)
+                blu = round(sin(frequency3 * i + shift3) * amplitude + center)
+                self.color = (red, grn, blu)
+                self.pixels.fill(self.color)
+                self.pixels.show()
+                self.color = (0, 0, 0)
+                self.pixels.fill(self.color)
+                self.pixels.show()

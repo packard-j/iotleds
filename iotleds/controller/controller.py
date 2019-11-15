@@ -4,7 +4,7 @@ import board
 import neopixel
 from datetime import datetime
 from queue import Queue, Full
-from iotleds.controller.colors import SolidColorMode, CascadeMode, RainbowMode, PatternMode
+from iotleds.controller.colors import SolidColorMode, CascadeMode, RainbowMode, PatternMode, SecretMode
 
 
 class LedController:
@@ -15,7 +15,8 @@ class LedController:
             SolidColor: SolidColorMode,
             Cascade: CascadeMode,
             Rainbow: RainbowMode,
-            Pattern: PatternMode
+            Pattern: PatternMode,
+            Secret: SecretMode
         }
         self.mode = self.modes[SolidColor](self.pixels)
         self.message_queue = Queue(maxsize=10)
